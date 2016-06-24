@@ -95,10 +95,10 @@ namespace InstaSharp
         public static string AuthLink(InstagramConfig config, List<Scope> scopes, ResponseType responseType = ResponseType.Token)
         {
             var scopesForUri = BuildScopeForUri(scopes);
-            return BuildAuthUri(config.OAuthUri.TrimEnd('/') + "/authorize", 
-                config.ClientId, 
-                config.RedirectUri, 
-                responseType, 
+            return BuildAuthUri(config.OAuthUri.TrimEnd('/') + "/authorize",
+                config.ClientId,
+                config.RedirectUri,
+                responseType,
                 scopesForUri);
         }
 
@@ -115,12 +115,13 @@ namespace InstaSharp
             //var request = new HttpRequestMessage(HttpMethod.Post, "https://api.instagram.com/oauth/access_token");
             var myParameters = string.Format("client_id={0}&client_secret={1}&grant_type={2}&redirect_uri={3}&code={4}",
                 config.ClientId.UrlEncode(),
-                config.ClientSecret.UrlEncode(), 
+                config.ClientSecret.UrlEncode(),
                 "authorization_code".UrlEncode(),
-                config.RedirectUri.UrlEncode(), 
+                config.RedirectUri.UrlEncode(),
                 code.UrlEncode());
 
             request.Content = new StringContent(myParameters);
+			request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-form-urlencoded");
 
             return client.ExecuteAsync<OAuthResponse>(request);
 
@@ -160,8 +161,8 @@ namespace InstaSharp
         {
             return string.Format("{0}?client_id={1}&redirect_uri={2}&response_type={3}&scope={4}", new object[] {
                 instagramOAuthUri.ToLower(),
-                clientId.ToLower(), 
-                callbackUri, 
+                clientId.ToLower(),
+                callbackUri,
                 responseType.ToString().ToLower(),
                 scopes.ToLower()
             });
